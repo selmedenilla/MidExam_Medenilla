@@ -1,0 +1,490 @@
+---
+- name: Install and configure elk stack
+  hosts: elastic_stack
+  tasks:
+    - name: Include variables
+      include_vars:
+        file: config.yaml
+
+    - name: Install Java for Ubuntu
+      include_role:
+        name: package_ubuntu
+      vars:
+        url: ""
+        repo: ""
+        package: default-jre
+        service: ""
+      when: ansible_facts['distribution'] == 'Ubuntu'
+
+    - name: Install nginx for Ubuntu
+      include_role:
+        name: package_ubuntu
+      vars:
+        url: ""
+        repo: ""
+        package: nginx
+        service: nginx
+      when: ansible_facts['distribution'] == 'Ubuntu'
+
+    - name: Install elasticsearch for Ubuntu
+      include_role:
+        name: package_ubuntu
+      vars:
+        url: "https://artifacts.elastic.co/GPG-KEY-elasticsearch"
+        repo: "deb https://artifacts.elastic.co/packages/7.x/apt stable main"
+        package: elasticsearch
+        service: ""
+      when: ansible_facts['distribution'] == 'Ubuntu'
+
+    - name: Install Java for Centos
+      include_role:
+        name: package_centos
+      vars:
+        package: "java-1.8.0-openjdk"
+        src: ""
+        dest: ""
+        service: ""
+      when: ansible_facts['distribution'] == 'CentOS'
+
+    - name: Install nginx for Centos
+      include_role:
+        name: package_centos
+      vars:
+        package: "nginx"
+        src: ""
+        dest: ""
+        service: "nginx"
+      when: ansible_facts['distribution'] == 'CentOS'
+
+    - name: Install elasticsearch for CentOS
+      include_role:
+        name: package_ubuntu
+      vars:
+        package: elasticsearch
+        src: elasticsearch.repo-centos
+        dest: "/etc/yum.repos.d/elasticsearch.repo"
+        service: ""
+      when: ansible_facts['distribution'] == 'CentOS'
+
+    - name: Stop firewall in Ubuntu
+      include_role:
+        name: firewall_ubuntu
+      when: ansible_facts['distribution'] == 'Ubuntu'
+
+    - name: Stop firewall in Centos
+      include_role:
+        name: firewall_centos
+      when: ansible_facts['distribution'] == 'CentOS'
+
+    - name: Configure elasticsearch
+      include_role:
+        name: conf_elastic
+
+- name: Install and configure Kibana
+  hosts: elastic_stack
+  tasks:
+    - name: Include variable
+      include_vars:
+        file: config.yaml
+
+    - name: Install Java for Ubuntu
+      include_role:
+        name: package_ubuntu
+      vars:
+        url: ""
+        repo: ""
+        package: default-jre
+        service: ""
+      when: ansible_facts['distribution'] == 'Ubuntu'
+
+    - name: Install nginx for Ubuntu
+      include_role:
+        name: package_ubuntu
+      vars:
+        url: ""
+        repo: ""
+        package: nginx
+        service: "nginx"
+      when: ansible_facts['distribution'] == 'Ubuntu'
+
+    - name: Install Kibana for Ubuntu
+      include_role:
+        name: package_ubuntu
+      vars:
+        url: "https://artifacts.elastic.co/GPG-KEY-elasticsearch"
+        repo: "deb https://artifacts.elastic.co/packages/7.x/apt stable main"
+        package: kibana
+        service: ""
+      when: ansible_facts['distribution'] == 'Ubuntu'
+
+    - name: Install Java for Centos
+      include_role:
+        name: package_centos
+      vars:
+        package: "java-1.8.0-openjdk"
+        src: ""
+        dest: ""
+        service: ""
+      when: ansible_facts['distribution'] == 'CentOS'
+
+    - name: Install nginx for Centos
+      include_role:
+        name: package_centos
+      vars:
+        package: "nginx"
+        src: ""
+        dest: ""
+        service: "nginx"
+      when: ansible_facts['distribution'] == 'CentOS'
+
+    - name: Install Kibana for Centos
+      include_role:
+        name: package_centos
+      vars:
+        package: kibana
+        src: elasticsearch.repo-centos
+        dest: "/etc/yum.repos.d/elasticsearch.repo"
+        service: ""
+      when: ansible_facts['os_family'] == 'CentOS'
+
+    - name: Stop firewall for Ubuntu
+      include_role:
+        name: firewall_ubuntu
+      when: ansible_facts['distribution'] == 'Ubuntu'
+
+    - name: Stop firewall for Centos
+      include_role:
+        name: firewall_centos
+      when: ansible_facts['distribution'] == 'CentOS'
+
+    - name: Configure Kibana
+      include_role:
+        name: conf_kibana
+
+- name: Install and Configure Logstash
+  hosts: elastic_stack
+  tasks:
+    - name: Include variable
+      include_vars:
+        file: config.yaml
+
+    - name: Install Java for Ubuntu
+      include_role:
+        name: package_ubuntu
+      vars:
+        url: ""
+        repo: ""
+        package: default-jre
+        service: ""
+      when: ansible_facts['distribution'] == 'Ubuntu'
+
+    - name: Install nginx for Ubuntu
+      include_role:
+        name: package_ubuntu
+      vars:
+        url: ""
+        repo: ""
+        package: nginx
+        service: "nginx"
+      when: ansible_facts['distribution'] == 'Ubuntu'
+
+    - name: Install logstash for Ubuntu
+      include_role:
+        name: package_ubuntu
+      vars:
+        url: "https://artifacts.elastic.co/GPG-KEY-elasticsearch"
+        repo: "deb https://artifacts.elastic.co/packages/7.x/apt stable main"
+        package: logstash
+        service: ""
+      when: ansible_facts['distribution'] == 'Ubuntu'
+
+    - name: Install Java for Centos
+      include_role:
+        name: package_centos
+      vars:
+        package: "java-1.8.0-openjdk"
+        src: ""
+        dest: ""
+        service: ""
+      when: ansible_facts['distribution'] == 'CentOS'
+
+    - name: Install nginx for Centos
+      include_role:
+        name: package_centos
+      vars:
+        package: "nginx"
+        src: ""
+        dest: ""
+        service: "nginx"
+      when: ansible_facts['distribution'] == 'CentOS'
+
+    - name: Install logstash for Centos
+      include_role:
+        name: package_centos
+      vars:
+        package: logstash
+        src: elasticsearch.repo-centos
+        dest: "/etc/yum.repos.d/elasticsearch.repo"
+        service: ""
+      when: ansible_facts['distribution'] == 'CentOS'
+
+    - name: Stop firewall in Ubuntu
+      include_role:
+        name: firewall_ubuntu
+      when: ansible_facts['distribution'] == 'Ubuntu'
+
+    - name: Stop firewall in Centos
+      include_role:
+        name: firewall_centos
+      when: ansible_facts['distribution'] == 'CentOS'
+
+    - name: Configure logstash
+      include_role:
+        name: conf_logstash
+
+- name: Install and configure Nagios
+  hosts: nagios
+  tasks:
+    - name: Include variable
+      include_vars:
+        file: config.yaml
+
+    - name: Install nagios packages for Ubuntu
+      include_role:
+        name: package_ubuntu
+      vars:
+        url: ""
+        repo: ""
+        package:
+          - autoconf
+          - gcc
+          - libc6
+          - make
+          - wget
+          - libssl-dev
+          - gawk
+          - dc
+          - build-essential
+          - snmp
+          - libnet-snmp-perl
+          - gettext
+          - unzip
+          - apache2
+          - php
+          - libapache2-mod-php7.4
+          - libgd-dev
+          - python3
+          - python3-pip
+        service: ""
+    - name: Configure nagios
+      include_role:
+        name: conf_nagios
+
+- name: Install grafana
+  hosts: grafana
+  tasks:
+    - name: Install grafana for Ubuntu
+      include_role:
+        name: package_ubuntu
+      vars:
+        url: "https://packages.grafana.com/gpg.key"
+        repo: "deb https://packages.grafana.com/oss/deb stable main"
+        package: "grafana"
+        service: "grafana-server"
+      when: ansible_facts['distribution'] == 'Ubuntu'
+
+    - name: Stop firewall in Ubuntu
+      include_role:
+        name: firewall_ubuntu
+      when: ansible_facts['distribution'] == 'Ubuntu'
+
+    - name: Install grafana for Centos
+      include_role:
+        name: package_centos
+      vars:
+        src: grafana.repo-centos
+        dest: "/etc/yum.repos.d/grafana.repo"
+        package: grafana
+        service: grafana-server
+      when: ansible_facts['distribution'] == 'CentOS'
+
+    - name: Stop firewall in Centos
+      include_role:
+        name: firewall_centos
+      when: ansible_facts['distribution'] == 'CentOS'
+
+- name: Install influxdb
+  hosts: influxdb
+  tasks:
+    - name: Install packages telegraf for Ubuntu
+      include_role:
+        name: package_ubuntu
+      vars:
+        url: ""
+        repo: ""
+        package: gnupg2
+        service: ""
+      when: ansible_facts['distribution'] == 'Ubuntu'
+
+    - name: Install packages telegraf for Ubuntu
+      include_role:
+        name: package_ubuntu
+      vars:
+        url: ""
+        repo: ""
+        package: software-properties-common
+        service: ""
+      when: ansible_facts['distribution'] == 'Ubuntu'
+
+    - name: Install influxdb for Ubuntu
+      include_role:
+        name: package_ubuntu
+      vars:
+        url: "https:/repos.influxdata.com/influx.key"
+        repo: "deb https://repos.influxdata.com/ubuntu bionic stable"
+        package: influxdb
+        service: influxdb
+      when: ansible_facts['distribution'] == 'Ubuntu'
+
+    - name: Install telegraf for Ubuntu
+      include_role:
+        name: package_ubuntu
+      vars:
+        url: ""
+        repo: ""
+        package: telegraf
+        service: telegraf
+      when: ansible_facts['distribution'] == 'Ubuntu'
+
+    - name: Stop firewall in Ubuntu
+      include_role:
+        name: firewall_ubuntu
+      when: ansible_facts['distribution'] == 'Ubuntu'
+
+    - name: Install influxdb for Centos
+      include_role:
+        name: package_centos
+      vars:
+        src: influxdb.repo-centos
+        dest: /etc/yum.repos.d/influx.repo
+        package: influxdb
+        service: influxdb
+      when: ansible_facts['distribution'] == 'CentOS'
+
+    - name: Install telegraf packages for Centos
+      include_role:
+        name: package_centos
+      vars:
+        src: ""
+        dest: ""
+        package: telegraf
+        service: telegraf
+      when: ansible_facts['distribution'] == 'CentOS'
+
+    - name: Stop firewall for Centos
+      include_role:
+        name: firewall_centos
+
+- name: Install prometheus
+  hosts: prometheus
+  tasks:
+    - name: Install prometheus for Ubuntu
+      include_role:
+        name: prometheus_ubuntu
+      vars:
+        src: prometheus.service
+      when: ansible_facts['distribution'] == 'Ubuntu'
+
+    - name: Stop firewall in Ubuntu
+      include_role:
+        name: firewall_ubuntu
+      when: ansible_facts['distribution'] == 'Ubuntu'
+
+    - name: Install prometheus for Centos
+      include_role:
+        name: prometheus_centos
+      vars:
+        src: prometheus.service
+      when: ansible_facts['distribution'] == 'CentOS'
+
+    - name: Stop firewall in Centos
+      include_role:
+        name: firewall_centos
+      when: ansible_facts['distribution'] == 'CentOS'
+
+- name: Install and configure httpd
+  hosts: lamp_stack
+  tasks:
+    - name: Include variables
+      include_vars:
+        file: config.yaml
+
+    - name: Install apache for Ubuntu
+      include_role:
+        name: package_ubuntu
+      vars:
+        url: ""
+        repo: ""
+        package:
+          - apache2
+          - php
+          - libapache2-mod-php
+          - php-mysql
+        service: ""
+      when: ansible_facts['distribution'] == 'Ubuntu'
+
+    - name: Install httpd for Centos
+      include_role:
+        name: package_centos
+      vars:
+        package:
+          - httpd
+          - php
+          - php-mysqlnd
+        src: ""
+        dest: ""
+        service: ""
+      when: ansible_facts['distribution'] == 'CentOS'
+
+    - name: Configure Apache2 for Ubuntu
+      include_role:
+        name: conf_apache_ubuntu
+      when: ansible_facts['distribution'] == 'Ubuntu'
+
+    - name: Configure httpd for Centos
+      include_role:
+        name: conf_httpd_centos
+      when: ansible_facts['distribution'] == 'CentOS'
+
+- name: Install MariaDB
+  hosts: lamp_stack
+  tasks:
+    - name: Install mariadb for Ubuntu
+      include_role:
+        name: package_ubuntu
+      vars:
+        url: ""
+        repo: ""
+        package: mariadb-server
+        service: ""
+      when: ansible_facts['distribution'] == 'Ubuntu'
+
+    - name: Install mariadb for Centos
+      include_role:
+        name: package_centos
+      vars:
+        package: mariadb-server
+        src: ""
+        dest: ""
+        service: ""
+      when: ansible_facts['distribution'] == 'CentOS'
+
+    - name: Stop firewall on Ubuntu
+      include_role:
+        name: firewall_ubuntu
+      when: ansible_facts['distribution'] == 'Ubuntu'
+
+    - name: Stop firewall on Centos
+      include_role:
+        name: firewall_centos
+      when: ansible_facts['distribution'] == 'CentOS'

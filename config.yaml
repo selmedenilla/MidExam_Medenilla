@@ -1,0 +1,9 @@
+elasticsearch_host: localhost
+systemd_src: elastic-timeout.conf
+
+kibana_host: localhost
+
+logstash-conf: logstash.conf
+
+nagios_user: admin
+nagios_password: admin123
